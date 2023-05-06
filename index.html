@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - SVG Displacement Map</title>
+
+<style>
+  html, body {
+  height: 100%;
+}
+
+body {
+  background: black;
+}
+
+svg {
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+</style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<svg>
+  <defs>       
+    <filter id="ripple-filter">                  
+      <feImage x="250" y="250" width="0%" height="0%" result="rippleImage" /> 
+      
+      <feDisplacementMap id="displacement-map"
+                         xChannelSelector="R" 
+                         yChannelSelector="G" 
+                         in="SourceGraphic" 
+                         in2="rippleImage"
+                         result="displacementMap"
+                         color-interpolation-filters="sRGB"
+                         scale="0" />
+
+      <feComposite operator="in" in2="rippleImage"></feComposite>
+    </filter>    
+  </defs>
+
+  <g id="logo">
+    <image id="logo-image" 
+           width="500" 
+           height="500" 
+           xlink:href="patterntwo2.svg" />
+
+    <image id="logo-overlay" 
+           width="500" 
+           height="500" 
+           xlink:href="patterntwo2.svg" 
+           filter="url(#ripple-filter)" />
+  </g> 
+</svg>
+
+<!-- partial -->
+  <script src='gsock.js'></script>
+
+
+  <script>
+ 
+
+
+var xlink = "http://www.w3.org/1999/xlink";
+var imgUrl = "normal_map_spider_ripple.png";
+var feImage = document.querySelector("feImage");
+
+toBase64(imgUrl, function (data) {
+
+  feImage.setAttributeNS(xlink, "xlink:href", data);
+
+  var tl = new TimelineMax({ repeat: -1, repeatDelay: 1 });
+tl.timeScale(0.2);
+  tl.from("#displacement-map", 1.5, { attr: { scale: 100 } }, 0).
+  to("feImage", 1.5, { attr: { x: -125, y: -125, width: "150%", height: "150%" } }, 0);
+});
+
+
+function toBase64(url, callback) {
+
+  var img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = function () {
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+    canvas.height = this.height;
+    canvas.width = this.width;
+    ctx.drawImage(this, 0, 0);
+
+    var dataURL = canvas.toDataURL("image/png");
+    callback(dataURL);
+    canvas = null;
+  };
+
+  img.src = url;
+}
+  </script>
+
+</body>
+</html>
