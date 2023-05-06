@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - SVG Displacement Map</title>
+
+<style>
+  html, body {
+  height: 100%;
+}
+
+body {
+  background: black;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+
+}
+</style>
+
+</head>
+<body>
+
+<svg>
+  <defs>       
+    <filter id="ripple-filter">                  
+      <feImage x="250" y="250" width="0%" height="0%" result="rippleImage" /> 
+      
+      <feDisplacementMap id="displacement-map"
+                         xChannelSelector="R" 
+                         yChannelSelector="G" 
+                         in="SourceGraphic" 
+                         in2="rippleImage"
+                         result="displacementMap"
+                         color-interpolation-filters="sRGB"
+                         scale="0" />
+
+      <feComposite operator="in" in2="rippleImage"></feComposite>
+    </filter>    
+  </defs>
+
+  <g id="logo">
+    <image id="logo-image" 
+           width="500" 
+           height="500" 
+           xlink:href="patterntwo2.svg" />
+
+    <image id="logo-overlay" 
+           width="500" 
+           height="500" 
+           xlink:href="patterntwo2.svg" 
+           filter="url(#ripple-filter)" />
+  </g> 
+</svg>
+
+<!-- partial -->
+  <script src='//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
